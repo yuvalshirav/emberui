@@ -53,9 +53,14 @@ month = Em.Component.extend
     if $target.is('[data-date]')
       @sendAction('select', moment($target.data('date'), 'YYYY-MM-DD'))
 
-
   monthDidChange: (->
-    Em.run.scheduleOnce 'afterRender', @, 'rerender'
+    Em.run.scheduleOnce 'afterRender', @, =>
+      elements = []
+      @render(elements)
+      $el = $(@element)
+      $el.empty()
+      for element in elements
+        $el.append(element)
   ).observes 'month'
 
 
@@ -83,7 +88,7 @@ month = Em.Component.extend
     @setSelection()
 
 
-  render: (buff) ->
+  render: (buff=[]) ->
     month = @get 'month'
     view  = @
 
